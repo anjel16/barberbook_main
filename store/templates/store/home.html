@@ -66,6 +66,7 @@
 
 <!-- PORTADA -->
 <section class="hero-barber text-white px-6 py-20 md:py-28">
+
     <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
 
         <div>
@@ -105,6 +106,7 @@
 <section class="max-w-7xl mx-auto px-6 mt-14">
 
     <div class="flex flex-col md:flex-row justify-between md:items-end gap-5 mb-7">
+
         <div>
             <span class="gold font-bold uppercase tracking-widest text-xs">
                 Encuentra lo que necesitas
@@ -118,6 +120,7 @@
         <p class="text-gray-500 text-sm">
             Calidad profesional para tu barbería.
         </p>
+
     </div>
 
     <form method="GET"
@@ -163,6 +166,7 @@
 <section id="catalogo" class="max-w-7xl mx-auto px-6 py-16">
 
     <div class="flex flex-wrap justify-between items-center mb-10 gap-4">
+
         <div>
             <span class="gold text-xs uppercase tracking-[4px] font-bold">
                 Nuestra selección
@@ -176,26 +180,35 @@
         <span class="text-gray-500 text-sm">
             Productos disponibles
         </span>
+
     </div>
 
+    <!-- PRODUCTOS -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
         {% for product in products %}
 
         <article class="product-card flex flex-col">
 
+            <!-- IMAGEN -->
             <div class="product-image relative">
 
                 {% if product.image %}
+
                     <img src="{{ product.image.url }}"
                          alt="{{ product.name }}">
+
                 {% else %}
+
                     <div class="h-full flex items-center justify-center text-gray-400">
                         <div class="text-center">
                             <span class="text-5xl">✂</span>
-                            <p class="mt-3 text-sm">Imagen no disponible</p>
+                            <p class="mt-3 text-sm">
+                                Imagen no disponible
+                            </p>
                         </div>
                     </div>
+
                 {% endif %}
 
                 <span class="absolute top-4 left-4 bg-black text-yellow-500 text-xs font-bold px-4 py-2 uppercase">
@@ -204,14 +217,19 @@
 
             </div>
 
+            <!-- INFORMACIÓN -->
             <div class="p-6 flex flex-col flex-grow">
 
                 <div class="flex flex-wrap gap-2 mb-4">
+
                     {% for cat in product.categories.all %}
+
                         <span class="text-xs uppercase tracking-wider text-yellow-800 bg-yellow-100 px-3 py-1">
                             {{ cat.name }}
                         </span>
+
                     {% endfor %}
+
                 </div>
 
                 <h3 class="text-2xl font-bold text-gray-900">
@@ -223,6 +241,7 @@
                 </p>
 
                 <div class="border-t border-gray-200 mt-6 pt-5">
+
                     <div class="flex justify-between items-center">
 
                         <div>
@@ -246,22 +265,29 @@
                         </div>
 
                     </div>
+
                 </div>
 
             </div>
 
+            <!-- BOTONES -->
             <div class="px-6 pb-6 flex flex-col gap-3">
 
                 {% if user.is_authenticated %}
-                    <a href="{% url 'add_to_cart' product.id %}"
-                       class="block text-center bg-black text-white py-4 font-bold uppercase text-xs tracking-wider hover:bg-yellow-700 transition">
-                        Agregar al carrito
-                    </a>
+
+                    <button type="button"
+                        disabled
+                        class="block w-full text-center bg-gray-400 text-white py-4 font-bold uppercase text-xs tracking-wider cursor-not-allowed">
+                        Carrito próximamente
+                    </button>
+
                 {% else %}
+
                     <a href="{% url 'login' %}"
                        class="block text-center bg-black text-white py-4 font-bold uppercase text-xs tracking-wider hover:bg-yellow-700 transition">
                         Inicia sesión para comprar
                     </a>
+
                 {% endif %}
 
             </div>
@@ -271,6 +297,7 @@
         {% empty %}
 
         <div class="col-span-full text-center py-20 bg-white border border-gray-200">
+
             <span class="text-5xl">✂</span>
 
             <h3 class="text-2xl font-bold mt-5">
@@ -280,6 +307,7 @@
             <p class="text-gray-500 mt-3">
                 Intenta buscar con otro nombre o selecciona otra categoría.
             </p>
+
         </div>
 
         {% endfor %}
@@ -288,13 +316,16 @@
 
     <!-- PAGINACIÓN -->
     {% if page_obj %}
+
     <div class="flex justify-center items-center gap-5 mt-14">
 
         {% if page_obj.has_previous %}
+
             <a href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q|urlencode }}&category={{ request.GET.category|urlencode }}"
                class="border border-gray-400 px-5 py-3 text-sm font-bold hover:bg-black hover:text-white transition">
                 ANTERIOR
             </a>
+
         {% endif %}
 
         <span class="bg-yellow-600 text-black font-bold px-5 py-3">
@@ -302,13 +333,16 @@
         </span>
 
         {% if page_obj.has_next %}
+
             <a href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q|urlencode }}&category={{ request.GET.category|urlencode }}"
                class="border border-gray-400 px-5 py-3 text-sm font-bold hover:bg-black hover:text-white transition">
                 SIGUIENTE
             </a>
+
         {% endif %}
 
     </div>
+
     {% endif %}
 
 </section>

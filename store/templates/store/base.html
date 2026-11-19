@@ -7,8 +7,10 @@
 
     <title>{% block title %}BarberBook{% endblock %}</title>
 
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <!-- Tipografías -->
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -54,93 +56,104 @@
 
 <body class="text-gray-900">
 
-<!-- BARRA SUPERIOR -->
-<div class="bg-black text-gray-300 text-center py-2 text-xs tracking-widest">
-    BARBERBOOK | ESTILO QUE MARCA DIFERENCIA
-</div>
-
-<!-- NAVEGACIÓN -->
-<header class="bg-[#171717] shadow-lg sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-5 flex flex-wrap justify-between items-center gap-4">
-
-        <a href="/" class="brand text-3xl font-bold tracking-wider text-white">
-            BARBER<span class="gold-text">BOOK.</span>
-        </a>
-
-        <nav class="flex items-center gap-5 flex-wrap">
-
-            <a href="/" class="nav-link text-gray-300 text-sm font-semibold">
-                INICIO
-            </a>
-
-            <a href="{% url 'cart_detail' %}" class="nav-link text-gray-300 text-sm font-semibold">
-                CARRITO
-            </a>
-
-            {% if user.is_authenticated and user.is_seller %}
-                <a href="{% url 'dashboard' %}" class="nav-link text-yellow-500 text-sm font-bold">
-                    PANEL
-                </a>
-            {% endif %}
-
-            {% if user.is_authenticated %}
-
-                <span class="text-gray-300 text-sm">
-                    Hola, <span class="gold-text">{{ user.username }}</span>
-                </span>
-
-                <form method="POST" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <button type="submit"
-                        class="border border-yellow-600 text-yellow-500 px-5 py-2 text-xs font-bold hover:bg-yellow-600 hover:text-black transition">
-                        CERRAR SESIÓN
-                    </button>
-                </form>
-
-            {% else %}
-
-                <a href="{% url 'login' %}"
-                    class="nav-link text-gray-300 text-sm font-semibold">
-                    INICIAR SESIÓN
-                </a>
-
-                <a href="{% url 'register' %}"
-                    class="gold-button px-5 py-3 text-xs font-bold tracking-wider">
-                    CREAR CUENTA
-                </a>
-
-            {% endif %}
-
-        </nav>
+    <!-- BARRA SUPERIOR -->
+    <div class="bg-black text-gray-300 text-center py-2 text-xs tracking-widest">
+        BARBERBOOK | ESTILO QUE MARCA DIFERENCIA
     </div>
-</header>
 
-<!-- CONTENIDO PRINCIPAL -->
-<main class="min-h-screen">
-    {% block content %}
-    {% endblock %}
-</main>
+    <!-- NAVEGACIÓN -->
+    <header class="bg-[#171717] shadow-lg sticky top-0 z-50">
 
-<!-- PIE DE PÁGINA -->
-<footer class="bg-[#171717] text-gray-400 py-10">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex flex-wrap justify-between items-center gap-4">
 
-    <div class="max-w-7xl mx-auto px-6 text-center">
+            <!-- LOGO -->
+            <a href="{% url 'home' %}" class="brand text-3xl font-bold tracking-wider text-white">
+                BARBER<span class="gold-text">BOOK.</span>
+            </a>
 
-        <h2 class="text-3xl text-white font-bold mb-3">
-            BARBER<span class="gold-text">BOOK.</span>
-        </h2>
+            <!-- MENÚ -->
+            <nav class="flex items-center gap-5 flex-wrap">
 
-        <p class="text-sm mb-5">
-            Todo para el cuidado y estilo del hombre moderno.
-        </p>
+                <a href="{% url 'home' %}" class="nav-link text-gray-300 text-sm font-semibold">
+                    INICIO
+                </a>
 
-        <div class="border-t border-gray-700 pt-5 text-xs">
-            © 2026 BarberBook. Todos los derechos reservados.
+                <!-- Catálogo -->
+                <a href="{% url 'home' %}#catalogo" class="nav-link text-gray-300 text-sm font-semibold">
+                    CATÁLOGO
+                </a>
+
+                {% if user.is_authenticated and user.is_seller %}
+                    <a href="{% url 'dashboard' %}" class="nav-link text-yellow-500 text-sm font-bold">
+                        PANEL
+                    </a>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+
+                    <span class="text-gray-300 text-sm">
+                        Hola, <span class="gold-text">{{ user.username }}</span>
+                    </span>
+
+                    <!-- CERRAR SESIÓN -->
+                    <form method="POST" action="{% url 'logout' %}">
+                        {% csrf_token %}
+
+                        <button type="submit"
+                            class="border border-yellow-600 text-yellow-500 px-5 py-2 text-xs font-bold hover:bg-yellow-600 hover:text-black transition">
+                            CERRAR SESIÓN
+                        </button>
+                    </form>
+
+                {% else %}
+
+                    <!-- INICIAR SESIÓN -->
+                    <a href="{% url 'login' %}"
+                        class="nav-link text-gray-300 text-sm font-semibold">
+                        INICIAR SESIÓN
+                    </a>
+
+                    <!-- REGISTRO -->
+                    <a href="{% url 'register' %}"
+                        class="gold-button px-5 py-3 text-xs font-bold tracking-wider">
+                        CREAR CUENTA
+                    </a>
+
+                {% endif %}
+
+            </nav>
+
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="min-h-screen">
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="bg-[#171717] text-gray-400 py-10">
+
+        <div class="max-w-7xl mx-auto px-6 text-center">
+
+            <h2 class="text-3xl text-white font-bold mb-3">
+                BARBER<span class="gold-text">BOOK.</span>
+            </h2>
+
+            <p class="text-sm mb-5">
+                Todo para el cuidado y estilo del hombre moderno.
+            </p>
+
+            <div class="border-t border-gray-700 pt-5 text-xs">
+                © 2026 BarberBook. Todos los derechos reservados.
+            </div>
+
         </div>
 
-    </div>
-
-</footer>
+    </footer>
 
 </body>
 </html>

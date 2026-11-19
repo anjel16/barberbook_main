@@ -1,4 +1,4 @@
-{% extends 'marketplace/base.html' %}
+{% extends 'BarberBook/base.html' %}
 
 {% block content %}
 
@@ -10,5 +10,276 @@
 
     <button class="btn btn-success">Registrarse</button>
 </form>
+
+{% endblock %}
+=======
+
+{% extends 'store/base.html' %}
+
+{% block title %}Crear cuenta | BarberBook{% endblock %}
+
+{% block content %}
+
+<style>
+    .register-container {
+        max-width: 1050px;
+        margin: 60px auto;
+        display: grid;
+        grid-template-columns: 1.2fr .8fr;
+        background: white;
+        box-shadow: 0 15px 45px rgba(0,0,0,.12);
+        border: 1px solid #e5dfd2;
+    }
+
+    .register-content {
+        padding: 45px;
+    }
+
+    .register-content h1 {
+        font-size: 36px;
+        font-weight: bold;
+        color: #171717;
+        margin-bottom: 10px;
+    }
+
+    .register-content .subtitle {
+        color: #777;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .register-content form p {
+        margin-bottom: 18px;
+    }
+
+    .register-content form label {
+        display: block;
+        color: #333;
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 7px;
+    }
+
+    .register-content form input,
+    .register-content form select {
+        width: 100%;
+        padding: 13px;
+        background: #faf9f6;
+        border: 1px solid #ddd;
+        outline: none;
+        color: #333;
+    }
+
+    .register-content form input:focus,
+    .register-content form select:focus {
+        border-color: #b58a3b;
+    }
+
+    .register-content form span.helptext {
+        display: block;
+        font-size: 11px;
+        color: #888;
+        margin-top: 6px;
+    }
+
+    .register-content form ul.errorlist {
+        color: #b42318;
+        font-size: 12px;
+        margin-bottom: 6px;
+        list-style: none;
+    }
+
+    .register-button {
+        width: 100%;
+        padding: 16px;
+        background: #171717;
+        color: #d6ae65;
+        font-weight: bold;
+        letter-spacing: 2px;
+        margin-top: 10px;
+        transition: .3s;
+    }
+
+    .register-button:hover {
+        background: #b58a3b;
+        color: #171717;
+    }
+
+    .register-aside {
+        background: #171717;
+        color: white;
+        padding: 45px 35px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-left: 4px solid #b58a3b;
+    }
+
+    .register-aside h2 {
+        font-size: 35px;
+        font-weight: bold;
+        line-height: 1.2;
+    }
+
+    .register-aside span {
+        color: #d6ae65;
+    }
+
+    .benefit {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        margin-top: 30px;
+    }
+
+    .benefit-icon {
+        color: #d6ae65;
+        font-size: 23px;
+    }
+
+    .benefit p {
+        color: #ccc;
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    @media(max-width: 750px) {
+        .register-container {
+            grid-template-columns: 1fr;
+            margin: 25px 15px;
+        }
+
+        .register-content {
+            padding: 30px 22px;
+        }
+
+        .register-aside {
+            padding: 35px 25px;
+        }
+    }
+</style>
+
+<div class="register-container">
+
+    <!-- FORMULARIO DE REGISTRO -->
+    <section class="register-content">
+
+        <p class="text-yellow-800 font-bold text-xs tracking-widest mb-3">
+            ÚNETE A BARBERBOOK
+        </p>
+
+        <h1>Crear cuenta</h1>
+
+        <p class="subtitle">
+            Completa tus datos para formar parte de nuestra comunidad.
+        </p>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p class="text-red-600 text-sm mb-4">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit" class="register-button">
+                CREAR MI CUENTA
+            </button>
+
+        </form>
+
+        <div class="text-center mt-7">
+
+            <p class="text-gray-500 text-sm">
+                ¿Ya tienes una cuenta?
+            </p>
+
+            <a href="{% url 'login' %}"
+               class="inline-block mt-2 text-yellow-800 font-bold text-sm hover:underline">
+                Iniciar sesión
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- PANEL INFORMATIVO -->
+    <aside class="register-aside">
+
+        <p class="text-yellow-500 uppercase tracking-widest text-xs font-bold mb-5">
+            BARBERBOOK EXPERIENCE
+        </p>
+
+        <h2>
+            TU ESTILO<br>
+            <span>COMIENZA</span><br>
+            AQUÍ.
+        </h2>
+
+        <p class="text-gray-400 text-sm leading-7 mt-6">
+            Crea tu cuenta y descubre una experiencia
+            diseñada para los amantes del cuidado personal
+            y el mundo de la barbería.
+        </p>
+
+        <div class="benefit">
+
+            <span class="benefit-icon">✂</span>
+
+            <div>
+                <h3 class="font-bold text-white">
+                    Productos especializados
+                </h3>
+
+                <p>
+                    Encuentra artículos para el cuidado
+                    y estilo masculino.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="benefit">
+
+            <span class="benefit-icon">★</span>
+
+            <div>
+                <h3 class="font-bold text-white">
+                    Tu propia cuenta
+                </h3>
+
+                <p>
+                    Accede a las funcionalidades
+                    de nuestra plataforma.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="benefit">
+
+            <span class="benefit-icon">◆</span>
+
+            <div>
+                <h3 class="font-bold text-white">
+                    Experiencia sencilla
+                </h3>
+
+                <p>
+                    Explora nuestro catálogo
+                    de manera fácil y rápida.
+                </p>
+            </div>
+
+        </div>
+
+    </aside>
+
+</div>
 
 {% endblock %}

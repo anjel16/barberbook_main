@@ -1,4 +1,4 @@
-{% extends 'marketplace/base.html' %}
+{% extends 'BarberBook/base.html' %}
 
 {% block content %}
 
@@ -11,5 +11,219 @@
 
     <button class="btn btn-primary">Ingresar</button>
 </form>
+
+{% endblock %}
+=======
+
+{% extends 'store/base.html' %}
+
+{% block title %}Acceso | BarberBook{% endblock %}
+
+{% block content %}
+
+<style>
+    .login-wrapper {
+        max-width: 950px;
+        margin: 65px auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background: white;
+        box-shadow: 0 15px 45px rgba(0,0,0,.15);
+        border: 1px solid #e5dfd2;
+    }
+
+    .login-image {
+        background:
+            linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.75)),
+            url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=900')
+            center/cover;
+        min-height: 540px;
+        display: flex;
+        align-items: flex-end;
+        padding: 40px;
+        color: white;
+    }
+
+    .login-image h2 {
+        font-size: 45px;
+        line-height: 1.1;
+        font-weight: bold;
+    }
+
+    .login-image span {
+        color: #c29a50;
+    }
+
+    .login-form {
+        padding: 55px 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .login-form h1 {
+        font-size: 34px;
+        color: #171717;
+        font-weight: bold;
+    }
+
+    .login-form label {
+        display: block;
+        font-size: 13px;
+        font-weight: 700;
+        color: #444;
+        margin-top: 22px;
+    }
+
+    .login-form input {
+        width: 100%;
+        padding: 14px;
+        border: 1px solid #ddd;
+        background: #faf9f6;
+        margin-top: 8px;
+        outline: none;
+    }
+
+    .login-form input:focus {
+        border-color: #b58a3b;
+    }
+
+    .login-submit {
+        width: 100%;
+        background: #171717;
+        color: #d6ae65;
+        padding: 16px;
+        margin-top: 30px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        transition: .3s;
+    }
+
+    .login-submit:hover {
+        background: #b58a3b;
+        color: #171717;
+    }
+
+    .login-message {
+        color: #b42318;
+        font-size: 13px;
+        margin-top: 12px;
+    }
+
+    @media(max-width: 700px) {
+        .login-wrapper {
+            grid-template-columns: 1fr;
+            margin: 25px 15px;
+        }
+
+        .login-image {
+            min-height: 230px;
+        }
+
+        .login-image h2 {
+            font-size: 32px;
+        }
+
+        .login-form {
+            padding: 35px 25px;
+        }
+    }
+</style>
+
+<div class="login-wrapper">
+
+    <!-- PANEL VISUAL -->
+    <div class="login-image">
+
+        <div>
+            <p class="text-yellow-400 uppercase tracking-widest text-sm font-bold mb-4">
+                Bienvenido a BarberBook
+            </p>
+
+            <h2>
+                EL ESTILO<br>
+                COMIENZA<br>
+                <span>AQUÍ.</span>
+            </h2>
+
+            <p class="text-gray-300 mt-5 text-sm leading-6">
+                Accede a tu cuenta y descubre
+                todo lo que tenemos preparado
+                para ti.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- FORMULARIO -->
+    <div class="login-form">
+
+        <p class="text-yellow-700 text-xs font-bold tracking-widest mb-3">
+            ACCESO DE USUARIOS
+        </p>
+
+        <h1>Iniciar sesión</h1>
+
+        <p class="text-gray-500 text-sm mt-3">
+            Ingresa tus credenciales para continuar.
+        </p>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p class="login-message">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label for="username">
+                Nombre de usuario
+            </label>
+
+            <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Escribe tu usuario"
+                autocomplete="username"
+                required
+            >
+
+            <label for="password">
+                Contraseña
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Escribe tu contraseña"
+                autocomplete="current-password"
+                required
+            >
+
+            <button type="submit" class="login-submit">
+                INGRESAR
+            </button>
+
+        </form>
+
+        <div class="text-center mt-7">
+
+            <p class="text-gray-500 text-sm">
+                ¿Todavía no tienes una cuenta?
+            </p>
+
+            <a href="{% url 'register' %}"
+               class="inline-block mt-2 text-yellow-800 font-bold text-sm hover:underline">
+                Crear una cuenta
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
 
 {% endblock %}

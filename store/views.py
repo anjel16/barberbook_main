@@ -1,41 +1,156 @@
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
+from django.contrib import messages
+from django.core.paginator import Paginator
+from django.db.models import Q
+
 from .forms import RegisterForm
 from .models import Product
 
 
-def home(request):
-    products = Product.objects.select_related('owner').prefetch_related('categories').all()
-    return render(request, 'marketplace/home.html', {'products': products})
+# =====================================
+# INICIO Y CATÁLOGO DE PRODUCTOS
+# =====================================
 
+def home(request):
+
+    products = Product.objects.select_related(
+        'owner'
+    ).prefetch_related(
+        'categories'
+    ).all()
+
+    # Buscador
+    q = request.GET.get('q', '').strip()
+
+    if q:
+        products = products.filter(
+            Q(name__icontains=q) |
+            Q(description__icontains=q)
+        )
+
+    # Filtro por categoría
+    category = request.GET.get('category', '')
+
+    if category.isdigit():
+        products = products.filter(
+            categories__id=int(category)
+        )
+
+    products = products.distinct()
+
+    # Obtener categorías
+    category_model = Product._meta.get_field(
+        'categories'
+    ).related_model
+
+    categories = category_model.objects.all()
+
+    # Paginación
+    paginator = Paginator(products, 9)
+
+    page_obj = paginator.get_page(
+        request.GET.get('page')
+    )
+
+    return render(
+        request,
+        'store/home.html',
+        {
+            'products': page_obj,
+            'categories': categories,
+            'page_obj': page_obj,
+        }
+    )
+
+
+# =====================================
+# REGISTRO DE USUARIOS
+# =====================================
 
 def register(request):
+
     if request.method == 'POST':
+
         form = RegisterForm(request.POST)
+
         if form.is_valid():
+
             user = form.save()
+
             login(request, user)
+
+            messages.success(
+                request,
+                '¡Tu cuenta fue creada correctamente!'
+            )
+
             return redirect('home')
+
     else:
+
         form = RegisterForm()
 
-    return render(request, 'marketplace/register.html', {'form': form})
+    return render(
+        request,
+        'store/register.html',
+        {'form': form}
+    )
 
+
+# =====================================
+# INICIO DE SESIÓN
+# =====================================
 
 def login_view(request):
+
     if request.method == 'POST':
+
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
 
-        if user:
+        if user is not None:
+
             login(request, user)
+
+            messages.success(
+                request,
+                '¡Bienvenido a BarberBook!'
+            )
+
             return redirect('home')
 
-    return render(request, 'marketplace/login.html')
+        else:
 
+            messages.error(
+                request,
+                'Usuario o contraseña incorrectos.'
+            )
+
+    return render(
+        request,
+        'store/login.html'
+    )
+
+
+# =====================================
+# CERRAR SESIÓN
+# =====================================
 
 def logout_view(request):
+
     logout(request)
+
+    messages.success(
+        request,
+        'Has cerrado sesión correctamente.'
+    )
+
     return redirect('home')

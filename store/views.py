@@ -4,9 +4,10 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
+from uuid import UUID
 
 from .forms import RegisterForm
-from .models import Product
+from .models import Product, Category
 
 
 # =====================================
@@ -30,29 +31,26 @@ def home(request):
             Q(description__icontains=q)
         )
 
-    # Filtro por categoría
+    # Filtro por categoría UUID
     category = request.GET.get('category', '')
 
-    if category.isdigit():
-        products = products.filter(
-            categories__id=int(category)
-        )
+    if category:
+        try:
+            category_uuid = UUID(category)
+            products = products.filter(
+                categories__id=category_uuid
+            )
+        except ValueError:
+            pass
 
     products = products.distinct()
 
     # Obtener categorías
-    category_model = Product._meta.get_field(
-        'categories'
-    ).related_model
-
-    categories = category_model.objects.all()
+    categories = Category.objects.all()
 
     # Paginación
     paginator = Paginator(products, 9)
-
-    page_obj = paginator.get_page(
-        request.GET.get('page')
-    )
+    page_obj = paginator.get_page(request.GET.get('page'))
 
     return render(
         request,
@@ -78,7 +76,6 @@ def register(request):
         if form.is_valid():
 
             user = form.save()
-
             login(request, user)
 
             messages.success(
@@ -89,7 +86,6 @@ def register(request):
             return redirect('home')
 
     else:
-
         form = RegisterForm()
 
     return render(
@@ -127,17 +123,12 @@ def login_view(request):
 
             return redirect('home')
 
-        else:
+        messages.error(
+            request,
+            'Usuario o contraseña incorrectos.'
+        )
 
-            messages.error(
-                request,
-                'Usuario o contraseña incorrectos.'
-            )
-
-    return render(
-        request,
-        'store/login.html'
-    )
+    return render(request, 'store/login.html')
 
 
 # =====================================

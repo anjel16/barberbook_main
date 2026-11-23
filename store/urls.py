@@ -14,9 +14,9 @@ urlpatterns = [
 
     # Productos CRUD
     path('products/create/', views.product_create, name='product_create'),
+    path('products/<uuid:pk>/edit/', views.product_update, name='product_update'),
+    path('products/<uuid:pk>/delete/', views.product_delete, name='product_delete'),
 
-    # Próximamente: editar y eliminar productos
-    # path('products/<uuid:pk>/edit/', views.product_update, name='product_update'),
-    # path('products/<uuid:pk>/delete/', views.product_delete, name='product_delete'),
+    # Carrito (temporal para que base.html no marque error)
+    path('cart/', views.cart_detail, name='cart_detail'),
 ]
-

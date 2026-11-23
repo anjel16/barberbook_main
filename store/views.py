@@ -188,3 +188,7 @@ def product_delete(request, pk):
         return redirect('dashboard')
 
     return render(request, 'store/product_confirm_delete.html', {'product': product})
+
+def cart_detail(request):
+    # Vista temporal hasta que implementes el carrito completo
+    return render(request, 'store/home.html')

@@ -1,14 +1,23 @@
-
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
 from uuid import UUID
-
 from .forms import RegisterForm
 from .models import Product, Category
+from django.shortcuts import render
+from django.shortcuts import render, redirect
+from .models import Product
 
+def product_create(request):
+    if request.method == 'POST':
+        # Aquí irá el código para guardar el producto
+        pass
+    return render(request, 'store/product_form.html')
+
+def dashboard(request):
+    return render(request, 'store/dashboard.html')
 
 # =====================================
 # INICIO Y CATÁLOGO DE PRODUCTOS

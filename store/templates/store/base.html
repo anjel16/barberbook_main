@@ -1,59 +1,23 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>{% block title %}BarberBook{% endblock %}</title>
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Tipografías -->
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+        <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: #f5f3ee;
-        }
-
-        h1, h2, h3, .brand {
-            font-family: 'Oswald', sans-serif;
-        }
-
-        .gold-text {
-            color: #b58a3b;
-        }
-
-        .gold-bg {
-            background: #b58a3b;
-        }
-
-        .nav-link {
-            transition: .3s;
-        }
-
-        .nav-link:hover {
-            color: #d6ae65;
-        }
-
-        .gold-button {
-            background: #b58a3b;
-            color: #151515;
-            transition: .3s;
-        }
-
-        .gold-button:hover {
-            background: #d6ae65;
-            transform: translateY(-2px);
-        }
+        body { font-family: 'Montserrat', sans-serif; background: #f5f3ee; }
+        h1, h2, h3, .brand { font-family: 'Oswald', sans-serif; }
+        .gold-text { color: #b58a3b; }
+        .gold-bg { background: #b58a3b; }
+        .nav-link { transition: .3s; }
+        .nav-link:hover { color: #d6ae65; }
+        .gold-button { background: #b58a3b; color: #151515; transition: .3s; }
+        .gold-button:hover { background: #d6ae65; transform: translateY(-2px); }
     </style>
-
     {% block extra_css %}{% endblock %}
 </head>
-
 <body class="text-gray-900">
 
     <!-- BARRA SUPERIOR -->
@@ -62,101 +26,73 @@
     </div>
 
     <!-- NAVEGACIÓN -->
-    <header class="bg-[#171717] shadow-lg sticky top-0 z-50">
-
+    <header class="bg-[#171717] shadow-lg sticky top-0 z-50 border-b-2 border-[#b58a3b]">
         <div class="max-w-7xl mx-auto px-6 py-5 flex flex-wrap justify-between items-center gap-4">
 
-            <!-- LOGO -->
             <a href="{% url 'home' %}" class="brand text-3xl font-bold tracking-wider text-white">
                 BARBER<span class="gold-text">BOOK.</span>
             </a>
 
-            <!-- MENÚ -->
             <nav class="flex items-center gap-5 flex-wrap">
-
-                <a href="{% url 'home' %}" class="nav-link text-gray-300 text-sm font-semibold">
-                    INICIO
-                </a>
-
-                <!-- Catálogo -->
-                <a href="{% url 'home' %}#catalogo" class="nav-link text-gray-300 text-sm font-semibold">
-                    CATÁLOGO
-                </a>
-
-                <a href="{% url 'cart_detail' %}" class="btn btn-outline-light btn-sm me-2">
-                    Carrito
-                </a>
-
-                {% if user.is_authenticated and user.is_seller %}
-                    <a href="{% url 'dashboard' %}" class="nav-link text-yellow-500 text-sm font-bold">
-                        PANEL
-                    </a>
-                {% endif %}
+                <a href="{% url 'home' %}" class="nav-link text-gray-300 text-sm font-semibold">INICIO</a>
+                <a href="{% url 'home' %}#catalogo" class="nav-link text-gray-300 text-sm font-semibold">CATÁLOGO</a>
+                <a href="{% url 'cart_detail' %}" class="nav-link text-gray-300 text-sm font-semibold">CARRITO</a>
 
                 {% if user.is_authenticated %}
+                    {% if user.is_staff or user.is_superuser or user.is_seller %}
+                        <a href="{% url 'dashboard' %}" class="nav-link text-yellow-500 text-sm font-bold border border-yellow-600/50 px-3 py-1">
+                            PANEL ADMIN
+                        </a>
+                    {% endif %}
 
                     <span class="text-gray-300 text-sm">
-                        Hola, <span class="gold-text">{{ user.username }}</span>
+                        Hola, <span class="gold-text font-semibold">{{ user.username }}</span>
+                        <span class="text-[10px] uppercase tracking-wider bg-neutral-800 text-yellow-500 px-2 py-0.5 ml-1 border border-yellow-700/40">
+                            {% if user.is_staff or user.is_superuser %}Admin{% elif user.is_seller %}Vendedor{% else %}Cliente{% endif %}
+                        </span>
                     </span>
 
-                    <!-- CERRAR SESIÓN -->
-                    <form method="POST" action="{% url 'logout' %}">
+                    <form method="POST" action="{% url 'logout' %}" class="inline">
                         {% csrf_token %}
-
                         <button type="submit"
-                            class="border border-yellow-600 text-yellow-500 px-5 py-2 text-xs font-bold hover:bg-yellow-600 hover:text-black transition">
+                            class="border border-yellow-600 text-yellow-500 px-4 py-2 text-xs font-bold hover:bg-yellow-600 hover:text-black transition">
                             CERRAR SESIÓN
                         </button>
                     </form>
-
                 {% else %}
-
-                    <!-- INICIAR SESIÓN -->
-                    <a href="{% url 'login' %}"
-                        class="nav-link text-gray-300 text-sm font-semibold">
-                        INICIAR SESIÓN
-                    </a>
-
-                    <!-- REGISTRO -->
-                    <a href="{% url 'register' %}"
-                        class="gold-button px-5 py-3 text-xs font-bold tracking-wider">
-                        CREAR CUENTA
-                    </a>
-
+                    <a href="{% url 'login' %}" class="nav-link text-gray-300 text-sm font-semibold">INICIAR SESIÓN</a>
+                    <a href="{% url 'register' %}" class="gold-button px-5 py-3 text-xs font-bold tracking-wider">CREAR CUENTA</a>
                 {% endif %}
-
             </nav>
-
         </div>
     </header>
 
+    <!-- MENSAJES DE CONFIRMACIÓN / ERROR -->
+    {% if messages %}
+        <div class="max-w-7xl mx-auto px-6 pt-6">
+            {% for message in messages %}
+                <div class="p-4 mb-3 border-l-4 shadow-sm flex justify-between items-center
+                    {% if message.tags == 'error' %}bg-red-50 border-red-600 text-red-800
+                    {% else %}bg-[#171717] border-[#b58a3b] text-white{% endif %}">
+                    <span class="text-sm font-medium">{{ message }}</span>
+                    <button onclick="this.parentElement.remove()" class="text-xs font-bold opacity-70 hover:opacity-100">✕</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <!-- CONTENIDO PRINCIPAL -->
     <main class="min-h-screen">
-
-        {% block content %}
-        {% endblock %}
-
+        {% block content %}{% endblock %}
     </main>
 
     <!-- PIE DE PÁGINA -->
     <footer class="bg-[#171717] text-gray-400 py-10">
-
         <div class="max-w-7xl mx-auto px-6 text-center">
-
-            <h2 class="text-3xl text-white font-bold mb-3">
-                BARBER<span class="gold-text">BOOK.</span>
-            </h2>
-
-            <p class="text-sm mb-5">
-                Todo para el cuidado y estilo del hombre moderno.
-            </p>
-
-            <div class="border-t border-gray-700 pt-5 text-xs">
-                © 2026 BarberBook. Todos los derechos reservados.
-            </div>
-
+            <h2 class="text-3xl text-white font-bold mb-3">BARBER<span class="gold-text">BOOK.</span></h2>
+            <p class="text-sm mb-5">Todo para el cuidado y estilo del hombre moderno.</p>
+            <div class="border-t border-gray-700 pt-5 text-xs">© 2026 BarberBook. Todos los derechos reservados.</div>
         </div>
-
     </footer>
 
 </body>

@@ -1,37 +1,122 @@
 {% extends 'store/base.html' %}
+{% block title %}Panel Administrativo | BarberBook{% endblock %}
 
 {% block content %}
+<div class="max-w-7xl mx-auto px-6 py-10">
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Mi Dashboard</h2>
-    <a href="{% url 'product_create' %}" class="btn btn-success">+ Nuevo Producto</a>
+    <!-- ENCABEZADO -->
+    <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
+        <div>
+            <h1 class="text-4xl font-bold text-[#171717] uppercase">Dashboard Administrativo</h1>
+            <p class="text-gray-600 text-sm">Control general de inventario, categorías y usuarios de BarberBook.</p>
+        </div>
+        <div class="flex gap-3 flex-wrap">
+            <a href="{% url 'category_create' %}" class="border-2 border-[#171717] text-[#171717] px-5 py-2.5 text-xs font-bold tracking-wider hover:bg-[#171717] hover:text-white transition">
+                + NUEVA CATEGORÍA
+            </a>
+            <a href="{% url 'product_create' %}" class="gold-button px-5 py-2.5 text-xs font-bold tracking-wider">
+                + NUEVO PRODUCTO
+            </a>
+        </div>
+    </div>
+
+    <!-- TARJETAS DE INDICADORES (KPIs) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="bg-[#171717] text-white p-6 border-b-4 border-[#b58a3b] shadow">
+            <p class="text-xs text-gray-400 uppercase tracking-widest">Usuarios Registrados</p>
+            <p class="text-4xl font-bold mt-2 gold-text">{{ total_users }}</p>
+        </div>
+        <div class="bg-[#171717] text-white p-6 border-b-4 border-[#b58a3b] shadow">
+            <p class="text-xs text-gray-400 uppercase tracking-widest">Productos Activos</p>
+            <p class="text-4xl font-bold mt-2 gold-text">{{ total_products }}</p>
+        </div>
+        <div class="bg-[#171717] text-white p-6 border-b-4 border-[#b58a3b] shadow">
+            <p class="text-xs text-gray-400 uppercase tracking-widest">Categorías</p>
+            <p class="text-4xl font-bold mt-2 gold-text">{{ total_categories }}</p>
+        </div>
+        <div class="bg-[#171717] text-white p-6 border-b-4 border-[#b58a3b] shadow">
+            <p class="text-xs text-gray-400 uppercase tracking-widest">Carritos Creados</p>
+            <p class="text-4xl font-bold mt-2 gold-text">{{ total_carts }}</p>
+        </div>
+    </div>
+
+    <!-- TABLA CRUD: PRODUCTOS -->
+    <div class="bg-white border border-[#e5dfd2] shadow-sm mb-10">
+        <div class="bg-[#171717] text-white px-6 py-4 flex justify-between items-center">
+            <h2 class="text-xl font-bold tracking-wide">GESTIÓN DE PRODUCTOS</h2>
+            <a href="{% url 'product_create' %}" class="text-xs gold-text font-bold hover:underline">+ Agregar</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-[#faf9f6] border-b border-gray-200 text-xs uppercase text-gray-600">
+                        <th class="py-3 px-4">Imagen</th>
+                        <th class="py-3 px-4">Producto</th>
+                        <th class="py-3 px-4">Precio</th>
+                        <th class="py-3 px-4">Stock</th>
+                        <th class="py-3 px-4">Propietario</th>
+                        <th class="py-3 px-4 text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 text-sm">
+                    {% for product in products %}
+                    <tr class="hover:bg-[#faf9f6]">
+                        <td class="py-3 px-4">
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-12 h-12 object-cover border border-gray-300">
+                            {% else %}
+                                <span class="text-xs text-gray-400">Sin imagen</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-3 px-4 font-semibold text-[#171717]">{{ product.name }}</td>
+                        <td class="py-3 px-4 font-bold gold-text">${{ product.price }}</td>
+                        <td class="py-3 px-4">{{ product.stock }} uds.</td>
+                        <td class="py-3 px-4 text-gray-500">{{ product.owner.username }}</td>
+                        <td class="py-3 px-4 text-right space-x-2">
+                            <a href="{% url 'product_update' product.id %}" class="inline-block bg-amber-600 text-white px-3 py-1.5 text-xs font-bold hover:bg-amber-700 transition">Editar</a>
+                            <a href="{% url 'product_delete' product.id %}" class="inline-block bg-red-700 text-white px-3 py-1.5 text-xs font-bold hover:bg-red-800 transition">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" class="py-6 text-center text-gray-500">No hay productos registrados todavía.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TABLA CRUD: CATEGORÍAS -->
+    <div class="bg-white border border-[#e5dfd2] shadow-sm">
+        <div class="bg-[#171717] text-white px-6 py-4 flex justify-between items-center">
+            <h2 class="text-xl font-bold tracking-wide">GESTIÓN DE CATEGORÍAS</h2>
+            <a href="{% url 'category_create' %}" class="text-xs gold-text font-bold hover:underline">+ Agregar</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-[#faf9f6] border-b border-gray-200 text-xs uppercase text-gray-600">
+                        <th class="py-3 px-4">Nombre</th>
+                        <th class="py-3 px-4">Descripción</th>
+                        <th class="py-3 px-4 text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 text-sm">
+                    {% for cat in categories %}
+                    <tr class="hover:bg-[#faf9f6]">
+                        <td class="py-3 px-4 font-semibold text-[#171717]">{{ cat.name }}</td>
+                        <td class="py-3 px-4 text-gray-600">{{ cat.description|default:"Sin descripción" }}</td>
+                        <td class="py-3 px-4 text-right space-x-2">
+                            <a href="{% url 'category_update' cat.id %}" class="inline-block bg-amber-600 text-white px-3 py-1.5 text-xs font-bold hover:bg-amber-700 transition">Editar</a>
+                            <a href="{% url 'category_delete' cat.id %}" class="inline-block bg-red-700 text-white px-3 py-1.5 text-xs font-bold hover:bg-red-800 transition">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3" class="py-6 text-center text-gray-500">No hay categorías registradas todavía.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Stock</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-
-    {% for product in products %}
-        <tr>
-            <td>{{ product.name }}</td>
-            <td>$ {{ product.price }}</td>
-            <td>{{ product.stock }}</td>
-            <td>
-                <a href="{% url 'product_update' product.id %}" class="btn btn-warning btn-sm">Editar</a>
-
-                <a href="{% url 'product_delete' product.id %}" class="btn btn-danger btn-sm">Eliminar</a>
-            </td>
-        </tr>
-    {% endfor %}
-
-    </tbody>
-</table>
-
 {% endblock %}

@@ -193,10 +193,17 @@
             <!-- IMAGEN -->
             <div class="product-image relative">
 
-                {% if product.image %}
+                                {% if product.image %}
 
                     <img src="{{ product.image.url }}"
-                         alt="{{ product.name }}">
+                         alt="{{ product.name }}"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div style="display:none;" class="h-full w-full items-center justify-center bg-[#171717] text-[#d6ae65]">
+                        <div class="text-center">
+                            <span class="text-5xl">✂</span>
+                            <p class="mt-2 text-xs uppercase tracking-widest text-gray-300">BarberBook</p>
+                        </div>
+                    </div>
 
                 {% else %}
 
@@ -270,21 +277,23 @@
 
             </div>
 
-            <!-- BOTONES -->
+                        <!-- BOTONES -->
             <div class="px-6 pb-6 flex flex-col gap-3">
 
                 {% if user.is_authenticated %}
 
-                    <button type="button"
-                        disabled
-                        class="block w-full text-center bg-gray-400 text-white py-4 font-bold uppercase text-xs tracking-wider cursor-not-allowed">
-                        Carrito próximamente
-                    </button>
+                    <form method="POST" action="{% url 'cart_add' product.id %}">
+                        {% csrf_token %}
+                        <button type="submit"
+                            class="gold-button block w-full text-center py-4 font-bold uppercase text-xs tracking-wider cursor-pointer">
+                            + Agregar al carrito
+                        </button>
+                    </form>
 
                 {% else %}
 
                     <a href="{% url 'login' %}"
-                       class="block text-center bg-black text-white py-4 font-bold uppercase text-xs tracking-wider hover:bg-yellow-700 transition">
+                       class="block text-center bg-black text-white py-4 font-bold uppercase text-xs tracking-wider hover:bg-neutral-800 transition">
                         Inicia sesión para comprar
                     </a>
 
@@ -296,18 +305,8 @@
 
         {% empty %}
 
-        <div class="col-span-full text-center py-20 bg-white border border-gray-200">
-
-            <span class="text-5xl">✂</span>
-
-            <h3 class="text-2xl font-bold mt-5">
-                No encontramos productos
-            </h3>
-
-            <p class="text-gray-500 mt-3">
-                Intenta buscar con otro nombre o selecciona otra categoría.
-            </p>
-
+        <div class="col-span-3 text-center py-16 bg-white border border-gray-200">
+            <p class="text-gray-500 text-lg">No se encontraron productos disponibles.</p>
         </div>
 
         {% endfor %}
@@ -315,34 +314,26 @@
     </div>
 
     <!-- PAGINACIÓN -->
-    {% if page_obj %}
-
-    <div class="flex justify-center items-center gap-5 mt-14">
-
+    {% if page_obj.has_other_pages %}
+    <div class="flex justify-center items-center gap-3 mt-12">
         {% if page_obj.has_previous %}
-
-            <a href="?page={{ page_obj.previous_page_number }}&q={{ request.GET.q|urlencode }}&category={{ request.GET.category|urlencode }}"
-               class="border border-gray-400 px-5 py-3 text-sm font-bold hover:bg-black hover:text-white transition">
-                ANTERIOR
+            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}#catalogo"
+               class="border border-[#171717] px-4 py-2 text-xs font-bold uppercase hover:bg-[#171717] hover:text-white transition">
+                ← Anterior
             </a>
-
         {% endif %}
 
-        <span class="bg-yellow-600 text-black font-bold px-5 py-3">
-            {{ page_obj.number }}
+        <span class="text-sm font-semibold text-gray-700">
+            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
         </span>
 
         {% if page_obj.has_next %}
-
-            <a href="?page={{ page_obj.next_page_number }}&q={{ request.GET.q|urlencode }}&category={{ request.GET.category|urlencode }}"
-               class="border border-gray-400 px-5 py-3 text-sm font-bold hover:bg-black hover:text-white transition">
-                SIGUIENTE
+            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}#catalogo"
+               class="border border-[#171717] px-4 py-2 text-xs font-bold uppercase hover:bg-[#171717] hover:text-white transition">
+                Siguiente →
             </a>
-
         {% endif %}
-
     </div>
-
     {% endif %}
 
 </section>

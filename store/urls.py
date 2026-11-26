@@ -17,6 +17,13 @@ urlpatterns = [
     path('products/<uuid:pk>/edit/', views.product_update, name='product_update'),
     path('products/<uuid:pk>/delete/', views.product_delete, name='product_delete'),
 
-    # Carrito (temporal para que base.html no marque error)
+    # Categorías CRUD
+    path('categories/create/', views.category_create, name='category_create'),
+    path('categories/<uuid:pk>/edit/', views.category_update, name='category_update'),
+    path('categories/<uuid:pk>/delete/', views.category_delete, name='category_delete'),
+
+    # Carrito
     path('cart/', views.cart_detail, name='cart_detail'),
+    path('cart/add/<uuid:pk>/', views.cart_add, name='cart_add'),
+    path('cart/remove/<uuid:pk>/', views.cart_remove, name='cart_remove'),
 ]

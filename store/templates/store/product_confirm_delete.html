@@ -1,13 +1,21 @@
-{% extends 'barberbook/base.html' %}
+{% extends 'store/base.html' %}
+{% block title %}Confirmar Eliminación | BarberBook{% endblock %}
 
 {% block content %}
+<div class="max-w-lg mx-auto my-16 bg-white p-8 border-t-4 border-red-700 shadow-lg text-center">
+    <h1 class="text-3xl font-bold text-[#171717] mb-3 uppercase">¿Eliminar {{ tipo|default:"registro" }}?</h1>
+    <p class="text-gray-600 text-sm mb-6">
+        Estás a punto de eliminar permanentemente <strong>"{{ product }}"</strong> de la base de datos. Esta acción no se puede deshacer.
+    </p>
 
-<h3>¿Eliminar "{{ product.name }}"?</h3>
-
-<form method="POST">
-    {% csrf_token %}
-    <button class="btn btn-danger">Sí, eliminar</button>
-    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancelar</a>
-</form>
-
+    <form method="POST" class="flex justify-center gap-4">
+        {% csrf_token %}
+        <button type="submit" class="bg-red-700 text-white px-6 py-3 text-xs font-bold tracking-widest uppercase hover:bg-red-800 transition">
+            Sí, Eliminar
+        </button>
+        <a href="{% url 'dashboard' %}" class="border border-gray-400 text-gray-700 px-6 py-3 text-xs font-bold tracking-widest uppercase hover:bg-gray-100">
+            Cancelar
+        </a>
+    </form>
+</div>
 {% endblock %}
